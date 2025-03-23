@@ -17,8 +17,8 @@ def plot_history(history):
     plt.title("Training and validation accuracy", fontsize = 16)
     plt.xlabel("Epochs", fontsize = 12)
     plt.ylabel("Accuracy", fontsize = 12)
-    plt.xlim([0, len(history)])  # Valid x-range
-    plt.xticks(range(len(history)))  # Set ticks for all epochs
+    plt.xlim([0, len(history)])  
+    plt.xticks(range(len(history)))  
     plt.legend()
 
     plt.subplot(1, 2, 2)
@@ -27,8 +27,8 @@ def plot_history(history):
     plt.title("Training and validation loss", fontsize = 16)
     plt.xlabel("Epochs", fontsize = 12)
     plt.ylabel("Loss", fontsize = 12)
-    plt.xlim([0, len(history)])  # Valid x-range
-    plt.xticks(range(len(history)))  # Optional: tick at every epoch
+    plt.xlim([0, len(history)])  
+    plt.xticks(range(len(history)))  
     plt.legend()
 
     plt.show()
@@ -69,10 +69,10 @@ def plot_confusion_matrix(y_true, y_pred, class_names):
     This function plots the confusion matrix.
     """
 
-    # Compute confusion matrix
+    # Computing confusion matrix
     conf_matrix = confusion_matrix(y_true, y_pred, labels = [0,1,2])
 
-    # Plot the confusion matrix
+    # Plotting the confusion matrix
     plt.figure(figsize=(8,6))
     sns.heatmap(conf_matrix, annot=True, fmt="d", cmap="Blues", square=True, xticklabels= class_names, yticklabels= class_names)
     plt.xlabel("Predicted Labels", fontsize = 12)

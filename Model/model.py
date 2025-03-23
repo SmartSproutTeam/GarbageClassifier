@@ -6,8 +6,6 @@ from tensorflow.keras.utils import image_dataset_from_directory
 import pandas as pd
 from tensorflow.keras.applications import DenseNet201
 
-import time
-
 from evaluation_metrics import plot_history, calculate_metrics, plot_confusion_matrix
 
 def make_subsets(original_path, new_base_path, class_names, total_images, image_size, batch_size):
@@ -103,9 +101,6 @@ def define_base_model():
     # Therefore we extract these features from the convolutional base, to be used in tailored model 
     conv_base.trainable = False
 
-    # Printing model summary 
-    # conv_base.summary()
-
     return conv_base
 
 def build_model():
@@ -145,7 +140,7 @@ def build_model():
     model = keras.Model(inputs, outputs)
 
     # Compiling the model
-    model.compile(optimizer="rmsprop", #==================================================== can adjust to adam or sgd
+    model.compile(optimizer="adam", 
                   loss="sparse_categorical_crossentropy",
                   metrics=["accuracy"])
 
@@ -190,8 +185,6 @@ def test_model(test_dataset, best_model_file):
 
 if __name__ == "__main__":
 
-    start_time = time.time()
-
     # Initialising folder path and class names
     original_path = 'C:\\Users\\laure\\OneDrive\\Desktop\\AI Studio\\Z. First Sprint - test MLOps pipeline, organisation\\Classification Model'
     new_base_path= 'C:\\Users\\laure\\OneDrive\\Desktop\\AI Studio\\Z. First Sprint - test MLOps pipeline, organisation\\Classification Model\\dataset_dir'
@@ -203,7 +196,7 @@ if __name__ == "__main__":
     batch_size = 32
     total_images = 900 # Defined as 900 for testing purposes due to uneven number of images for each class; remove this out if even number of images for each class
 
-    # # Developing training and testing subsets; remove total images if even number of images for each class
+    # Developing training and testing subsets; remove total images if even number of images for each class
     train_dataset, test_dataset, validation_dataset = make_subsets(original_path, new_base_path, folder_names, total_images, image_size, batch_size)
 
     # Defining the best model
@@ -223,10 +216,6 @@ if __name__ == "__main__":
     # Loading history and best model 
     history_df = pd.read_csv("training_history.csv")
     best_model = keras.models.load_model(best_model_file)
-
-    end_time = time.time()
-    elapsed_time = end_time - start_time
-    print(f"\nTotal training time: {elapsed_time:.2f} seconds")
 
     # Evaluating metrics and plotting confusion matrix
     y_true, y_pred = calculate_metrics(test_dataset, best_model, class_names)
