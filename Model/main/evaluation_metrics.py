@@ -33,22 +33,20 @@ def plot_history(history):
 
     plt.show()
 
-def calculate_metrics(test_dataset, model, class_names):
+def calculate_metrics(model, X_test, y_test, label_names):
     """
     This function calculates the evaluation metrics - accuracy, precision, recall, F1 score.
     """
 
-    # Getting true labels
-    y_true = np.concatenate([y for x,y in test_dataset], axis=0)
 
     # Predicting class probabilities
-    y_pred_probs = model.predict(test_dataset)
+    y_pred_probs = model.predict(X_test)
 
     # Converting probabilities to class predictions
     y_pred = np.argmax(y_pred_probs, axis=1)  
 
     # Computing evaluation metrics per class
-    report = classification_report(y_true, y_pred, target_names=class_names, output_dict=True)
+    report = classification_report(y_test, y_pred, target_names=label_names, output_dict=True)
 
     # Converting to a DataFrame for better readability
     df_report = pd.DataFrame(report).transpose()
@@ -61,10 +59,10 @@ def calculate_metrics(test_dataset, model, class_names):
     # Saving to CSV file
     df_report.to_csv("evaluation_metrics.csv")
 
-    return y_true, y_pred
+    return y_pred
 
 
-def plot_confusion_matrix(y_true, y_pred, class_names):
+def plot_confusion_matrix(y_true, y_pred, label_names):
     """
     This function plots the confusion matrix.
     """
@@ -74,7 +72,7 @@ def plot_confusion_matrix(y_true, y_pred, class_names):
 
     # Plot the confusion matrix
     plt.figure(figsize=(8,6))
-    sns.heatmap(conf_matrix, annot=True, fmt="d", cmap="Blues", square=True, xticklabels= class_names, yticklabels= class_names)
+    sns.heatmap(conf_matrix, annot=True, fmt="d", cmap="Blues", square=True, xticklabels= label_names, yticklabels= label_names)
     plt.xlabel("Predicted Labels", fontsize = 12)
     plt.ylabel("True Labels", fontsize = 12)
     plt.title("Confusion Matrix of DenseNet201 Classifier", fontsize = 14)
