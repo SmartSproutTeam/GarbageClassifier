@@ -11,10 +11,11 @@ seaborn = "*"
 scikit-learn = "==1.4.0"
 gitpython = "==3.1.42"
 python-dotenv = "==1.0.1"
-tensorflow = "==2.13.0"
 scikit-image = "*"
 opencv-python-headless = "*"
 pandas = "*"
+chardet = "*"
+tensorflow = "2.13.0"
 
 [dev-packages]
 
