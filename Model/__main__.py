@@ -11,7 +11,7 @@ def main():
 
     # Initialising folder path 
     # original_path = 'D:\\10. AI Studio Dataset\\10 categories dataset\\garbage-dataset' # =========== EDIT THIS FOR GOOGLE ENTERPRISE
-    original_path = '../Data' # =========== EDIT THIS FOR GOOGLE ENTERPRISE
+    original_path = '../Data/garbage-dataset' # =========== EDIT THIS FOR GOOGLE ENTERPRISE
 
     # Defining image size and batch size
     image_size = (224, 224)
