@@ -4,14 +4,18 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-numpy = "*"
-matplotlib = "*"
-scikit-image = "*"
-scikit-learn = "*"
-opencv-python = "*"
+clearml = "==1.14.2"
+numpy = ">=1.22,<=1.24.3"
+matplotlib = "==3.8.2"
 seaborn = "*"
-tensorflow = "*"
+scikit-learn = "==1.4.0"
+gitpython = "==3.1.42"
+python-dotenv = "==1.0.1"
+scikit-image = "*"
+opencv-python-headless = "*"
 pandas = "*"
+chardet = "*"
+tensorflow = "2.13.0"
 
 [dev-packages]
 

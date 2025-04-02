@@ -175,3 +175,7 @@ cython_debug/
 
 # Data
 Data/
+
+best_model.keras
+evaluation_metrics.csv
+training_history.csv
