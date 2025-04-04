@@ -1,7 +1,7 @@
 import time
 import keras
 import pandas as pd
-from Model.evaluate import calculate_metrics, plot_confusion_matrix, plot_history
+from main.evaluation_metrics import calculate_metrics, plot_confusion_matrix, plot_history
 from main.model import build_model, train_model
 from main.preprocess import create_generators, load_images_from_folders, make_subsets
 
