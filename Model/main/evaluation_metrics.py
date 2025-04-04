@@ -33,14 +33,13 @@ def plot_history(history):
 
     plt.show()
 
-def calculate_metrics(model, X_test, y_test, label_names):
+def calculate_metrics(test_generator, y_test, model, label_names):
     """
     This function calculates the evaluation metrics - accuracy, precision, recall, F1 score.
-    """
-
+    """    
 
     # Predicting class probabilities
-    y_pred_probs = model.predict(X_test)
+    y_pred_probs = model.predict(test_generator)
 
     # Converting probabilities to class predictions
     y_pred = np.argmax(y_pred_probs, axis=1)  
@@ -62,13 +61,13 @@ def calculate_metrics(model, X_test, y_test, label_names):
     return y_pred
 
 
-def plot_confusion_matrix(y_true, y_pred, label_names):
+def plot_confusion_matrix(y_true, y_pred, label_names, int_labels):
     """
     This function plots the confusion matrix.
     """
 
     # Computing confusion matrix
-    conf_matrix = confusion_matrix(y_true, y_pred, labels = [0,1,2])
+    conf_matrix = confusion_matrix(y_true, y_pred, labels = int_labels)
 
     # Plotting the confusion matrix
     plt.figure(figsize=(8,6))
