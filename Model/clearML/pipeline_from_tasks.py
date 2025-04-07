@@ -1,74 +1,27 @@
 from clearml import Task
-from clearml.automation import PipelineController
+import os
 
+# Create a dataset experiment
+task = Task.init(project_name="examples", task_name="Charlie Pipeline step 1 dataset artifact")
 
-def pre_execute_callback_example(a_pipeline, a_node, current_param_override):
-    # type (PipelineController, PipelineController.Node, dict) -> bool
-    print(
-        "Cloning Task id={} with parameters: {}".format(
-            a_node.base_task_id, current_param_override
-        )
-    )
-    # if we want to skip this node (and subtree of this node) we return False
-    # return True to continue DAG execution
-    return True
+# Only create the task, we will actually execute it later
+task.execute_remotely()
 
+# Path to the zipped dataset file
+zipped_dataset = "./archive.zip"
 
-def post_execute_callback_example(a_pipeline, a_node):
-    # type (PipelineController, PipelineController.Node) -> None
-    print("Completed Task id={}".format(a_node.executed))
-    # if we need the actual executed Task: Task.get_task(task_id=a_node.executed)
-    return
+print(f"Current working directory: {os.getcwd()}")
 
+# Resolve and verify the file path
+absolute_path = os.path.abspath(zipped_dataset)
+print(f"Resolved absolute path: {absolute_path}")
+if not os.path.exists(absolute_path):
+    raise FileNotFoundError(f"File '{absolute_path}' does not exist!")
 
-def run_pipeline():
-    # Connecting ClearML with the current pipeline,
-    # from here on everything is logged automatically
-    pipe = PipelineController(
-        name="Pipeline demo", project="examples", version="0.0.1", add_pipeline_tags=False
-    )
+# Upload the zipped file as an artifact
+task.upload_artifact(name="dataset", artifact_object=zipped_dataset)
 
-    pipe.add_parameter(
-        "url",
-        "dataset_url",
-    )
+print(f"Uploaded zipped dataset '{zipped_dataset}' as an artifact.")
 
-    pipe.set_default_execution_queue("helloworld")
-
-    pipe.add_step(
-        name="stage_data",
-        base_task_project="examples",
-        base_task_name="Charlie Pipeline step 1 dataset artifact",
-        parameter_override={"General/dataset_url": "${pipeline.url}"},
-    )
-
-    # pipe.add_step(
-    #     name="stage_process",
-    #     parents=["stage_data"],
-    #     base_task_name="Pipeline step 2 process dataset",
-    #     base_task_project="examples",
-    #     parameter_override={
-    #         "General/dataset_task_id": "${stage_data.id}",
-    #         "General/test_size": 0.25,
-    #         "General/random_state": 42
-    #     },
-    # )
-
-    # pipe.add_step(
-    #     name="stage_train",
-    #     parents=["stage_process"],
-    #     base_task_project="examples",
-    #     base_task_name="Pipeline step 3 train model",
-    #     parameter_override={"General/dataset_task_id": "${stage_process.id}"},
-    # )
-
-    # for debugging purposes use local jobs
-    pipe.start_locally()
-
-    # Starting the pipeline (in the background)
-    # pipe.start(queue="pipeline")  # already set pipeline queue
-
-    print("done")
-
-if __name__ == '__main__':
-    run_pipeline()
+# We are done
+print("Done")
