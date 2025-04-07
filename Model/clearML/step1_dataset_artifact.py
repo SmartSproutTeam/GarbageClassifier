@@ -1,7 +1,7 @@
 from clearml import Task
 
 # Create a dataset experiment
-task = Task.init(project_name="examples", task_name="Pipeline step 1 dataset artifact")
+task = Task.init(project_name="examples", task_name="Charlie Pipeline step 1 dataset artifact")
 
 # Only create the task, we will actually execute it later
 task.execute_remotely()
