@@ -33,7 +33,7 @@ def run_pipeline():
     #     "dataset_url",
     # )
 
-    pipe.set_default_execution_queue("pipeline")
+    pipe.set_default_execution_queue("helloworld")
 
     pipe.add_step(
         name="stage_data",
