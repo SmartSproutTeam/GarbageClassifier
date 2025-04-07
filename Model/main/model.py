@@ -1,11 +1,10 @@
 from tensorflow import keras
-import tensorflow as tf
 from tensorflow.keras import layers
 from tensorflow.keras.applications import DenseNet201
 
 def define_base_model():
     """
-    This function defines the base model i.e DenseNet201
+    This function defines the base model i.e DenseNet201 model
     """
 
     conv_base = DenseNet201(
@@ -18,32 +17,20 @@ def define_base_model():
     # Therefore we extract these features from the convolutional base, to be used in tailored model 
     conv_base.trainable = False
 
-    # Printing model summary 
-    # conv_base.summary()
-
     return conv_base
 
-def build_model(label_number):
+def build_model(image_size, num_classes):
     """
     This function builds a convolutional neural network model.
 
     """
 
-    # Data augmentation 
-    data_augmentation = keras.Sequential([
-        layers.RandomRotation(0.111),     # ~40 degrees (0.111 * 360 ≈ 40°)
-        layers.RandomZoom(0.2),           # zoom up to 20%
-        layers.RandomFlip("horizontal"),  # horizontal flip
-        layers.RandomWidth(0.2),          # width shift up to 20%
-        layers.RandomHeight(0.2),         # height shift up to 20%
-    ])
-
-    inputs = keras.Input(shape=(400, 400, 3))  
-    x = data_augmentation(inputs)
+    # Defining the inputs as shape (224, 224, 3); 3 denotes the 3 colour channels i.e. RGB
+    inputs = keras.Input(shape=(image_size[0], image_size[1], 3))  
 
     # Passing through the convolutional base
     conv_base = define_base_model()
-    x = conv_base(x)
+    x = conv_base(inputs)
 
     # Reducing the entire feature map into single vector; reduces overfitting and has fewer parameter than Flatten
     x = layers.GlobalAveragePooling2D()(x)
@@ -52,31 +39,46 @@ def build_model(label_number):
     x = layers.Dense(256, activation="relu")(x)
     x = layers.Dropout(0.5)(x)
 
-    # Defining the outputs 
-    outputs = layers.Dense(label_number, activation = "softmax")(x) # defined for 3 output classes
+    # Defining the outputs and the number of output classes
+    outputs = layers.Dense(num_classes, activation = "softmax")(x) 
 
     model = keras.Model(inputs, outputs)
 
     # Compiling the model
-    model.compile(optimizer="rmsprop", #==================================================== can adjust to adam or sgd
+    model.compile(optimizer="adam", 
                   loss="sparse_categorical_crossentropy",
                   metrics=["accuracy"])
 
     return model
 
-def train_model(model, train_X, train_y):
+def train_model(model, train_generator, val_generator, best_model_file):
+    """
+    This function trains the model.
+    """
+
+    callbacks = [
+        keras.callbacks.ModelCheckpoint(
+            filepath=best_model_file,
+            monitor="val_loss",
+            save_best_only=True
+        )
+    ]
+
     history = model.fit(
-        train_X,
-        train_y,
+        train_generator,
         epochs=20, 
-        validation_split=0.2,
+        validation_data=val_generator,
+        callbacks=callbacks,
     )
-    
+
+    print(f"Model training complete. Best model saved to: {best_model_file}")
+        
     return history
 
-def test_model(model, test_X, test_y):  
-    # test_model = keras.models.load_model(best_model_file)
-    test_loss, test_acc = model.evaluate(test_X, test_y)
-    print(f"\nTest accuracy: {test_acc:.3f}")
-    
-    return test_acc, test_loss
+
+
+
+
+
+
+
