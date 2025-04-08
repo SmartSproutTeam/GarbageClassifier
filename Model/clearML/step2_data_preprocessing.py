@@ -1,8 +1,9 @@
-import os
+import os, sys
 import pickle
 import zipfile
 from clearml import Task
 
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from main.preprocess import load_images_from_folders, make_subsets
 
 
@@ -18,6 +19,7 @@ args = {
     'dataset_url': '',
     'random_state': 42,
     'test_size': 0.2,
+    'image_size': (128, 128),
 }
 
 # store arguments, later we will be able to change them from outside the code
@@ -34,7 +36,7 @@ if args['dataset_task_id']:
     print("Available artifacts:", dataset_upload_task.artifacts.keys())
 
     # Assuming the artifact name was 'my_dataset' and is a folder path
-    artifact_path = dataset_upload_task.artifacts['my_dataset'].get_local_copy()
+    artifact_path = dataset_upload_task.artifacts['dataset'].get_local_copy()
 else:
     raise ValueError("Missing dataset_task_id!")
 
@@ -46,7 +48,8 @@ with zipfile.ZipFile(artifact_path, 'r') as zip_ref:
 
 print("Dataset extracted to:", unzip_path)
 
-X, y, labels = load_images_from_folders(unzip_path, image_size=args['image_size'])
+X, y, labels = load_images_from_folders(os.path.join(unzip_path, "garbage-dataset"), image_size=args['image_size'])
+print(f"Loaded {len(X)} images with labels: {len(labels)}")
 X_train, X_val, X_test, y_train, y_val, y_test = make_subsets(X, y)
 
 # === Upload Processed Data ===

@@ -35,12 +35,12 @@ def run_pipeline():
 
     pipe.set_default_execution_queue("helloworld")
 
-    # pipe.add_step(
-    #     name="stage_data",
-    #     base_task_project="examples",
-    #     base_task_name="Charlie Pipeline step 1 dataset artifact",
-    #     parameter_override={"General/dataset_url": "${pipeline.url}"},
-    # )
+    pipe.add_step(
+        name="stage_data",
+        base_task_project="examples",
+        base_task_name="Charlie Pipeline step 1 dataset artifact",
+        parameter_override={"General/dataset_url": "${pipeline.url}"},
+    )
 
     pipe.add_step(
         name="stage_process",
@@ -48,8 +48,7 @@ def run_pipeline():
         base_task_name="Charlie Pipeline step 2 process dataset",
         base_task_project="examples",
         parameter_override={
-            # "General/dataset_task_id": "${stage_data.id}",
-            "General/dataset_task_id": "${4e9039633d3a442c858b830a94bff319}",
+            "General/dataset_task_id": "${stage_data.id}",
             "General/test_size": 0.25,
             "General/random_state": 42
         },
