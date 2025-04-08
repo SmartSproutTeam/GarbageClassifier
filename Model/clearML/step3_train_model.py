@@ -37,7 +37,7 @@ print('Dataset loaded')
 
 
 # Creating generators
-    batch_size = 32
+batch_size = 32
 train_generator, val_generator, test_generator = create_generators(X_train, y_train, X_val, y_val, X_test, y_test, batch_size)
 
 # Defining the best model
