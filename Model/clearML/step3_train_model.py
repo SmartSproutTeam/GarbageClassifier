@@ -4,10 +4,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 from clearml import Task, Logger
 
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from main.model import build_model, train_model
 from main.preprocess import create_generators
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 # Connecting ClearML with the current process,
 # from here on everything is logged automatically
