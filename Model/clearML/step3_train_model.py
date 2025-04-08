@@ -11,7 +11,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 # Connecting ClearML with the current process,
 # from here on everything is logged automatically
-task = Task.init(project_name="examples", task_name="Pipeline step 3 train model")
+task = Task.init(project_name="examples", task_name="Charlie Pipeline step 3 train model")
 logger = Logger.current_logger()
 
 # Arguments
