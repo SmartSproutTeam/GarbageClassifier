@@ -14,12 +14,13 @@ task = Task.init(project_name="examples", task_name="Charlie Pipeline step 2 pro
 # program arguments
 # Use either dataset_task_id to point to a tasks artifact or
 # use a direct url with dataset_url
+image_size = (128, 128)
 args = {
     'dataset_task_id': '', #update id if it needs running locally
     'dataset_url': '',
     'random_state': 42,
     'test_size': 0.2,
-    'image_size': (128, 128),
+    'image_size': image_size,
 }
 
 # store arguments, later we will be able to change them from outside the code
@@ -60,6 +61,7 @@ task.upload_artifact('y_train', y_train)
 task.upload_artifact('y_val', y_val)
 task.upload_artifact('y_test', y_test)
 task.upload_artifact('label_names', labels)
+task.upload_artifact('image_size', image_size)
 
 print("Artifacts uploaded in background.")
 print("Done.")

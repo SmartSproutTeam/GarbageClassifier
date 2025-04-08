@@ -54,13 +54,13 @@ def run_pipeline():
         },
     )
 
-    # pipe.add_step(
-    #     name="stage_train",
-    #     parents=["stage_process"],
-    #     base_task_project="examples",
-    #     base_task_name="Charlie Pipeline step 3 train model",
-    #     parameter_override={"General/dataset_task_id": "${stage_process.id}"},
-    # )
+    pipe.add_step(
+        name="stage_train",
+        parents=["stage_process"],
+        base_task_project="examples",
+        base_task_name="Charlie Pipeline step 3 train model",
+        parameter_override={"General/dataset_task_id": "${stage_process.id}"},
+    )
 
     # for debugging purposes use local jobs
     pipe.start_locally()
