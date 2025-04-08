@@ -1,4 +1,6 @@
+import os
 import pickle
+import zipfile
 from clearml import Task
 
 from main.preprocess import load_images_from_folders, make_subsets
@@ -32,11 +34,19 @@ if args['dataset_task_id']:
     print("Available artifacts:", dataset_upload_task.artifacts.keys())
 
     # Assuming the artifact name was 'my_dataset' and is a folder path
-    dataset_folder_path = dataset_upload_task.artifacts['my_dataset'].get_local_copy()
+    artifact_path = dataset_upload_task.artifacts['my_dataset'].get_local_copy()
 else:
     raise ValueError("Missing dataset_task_id!")
 
-X, y, labels = load_images_from_folders(dataset_folder_path, image_size=args['image_size'])
+unzip_path = os.path.join(task.cache_dir, "unzipped_dataset")
+os.makedirs(unzip_path, exist_ok=True)
+
+with zipfile.ZipFile(artifact_path, 'r') as zip_ref:
+    zip_ref.extractall(unzip_path)
+
+print("Dataset extracted to:", unzip_path)
+
+X, y, labels = load_images_from_folders(unzip_path, image_size=args['image_size'])
 X_train, X_val, X_test, y_train, y_val, y_test = make_subsets(X, y)
 
 # === Upload Processed Data ===
