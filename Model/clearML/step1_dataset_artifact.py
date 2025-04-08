@@ -8,7 +8,7 @@ task = Task.init(project_name="examples", task_name="Charlie Pipeline step 1 dat
 task.execute_remotely()
 
 # Path to the zipped dataset file
-zipped_dataset = "/content/archive.zip"
+zipped_dataset = "/content/GarbageClassifier/Data/archive.zip"
 
 print(f"Current working directory: {os.getcwd()}")
 
