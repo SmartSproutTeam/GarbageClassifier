@@ -9,7 +9,7 @@ from main.preprocess import load_images_from_folders, make_subsets
 
 # Connecting ClearML with the current process,
 # from here on everything is logged automatically
-task = Task.init(project_name="examples", task_name="Charlie Pipeline step 2 process dataset")
+task = Task.init(project_name="GarbageClassifier", task_name="Preprocess dataset")
 
 # program arguments
 # Use either dataset_task_id to point to a tasks artifact or

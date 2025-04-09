@@ -2,7 +2,7 @@ from clearml import Task
 import os
 
 # Create a dataset experiment
-task = Task.init(project_name="examples", task_name="Charlie Pipeline step 1 dataset artifact")
+task = Task.init(project_name="GarbageClassifier", task_name="Upload dataset")
 
 # Only create the task, we will actually execute it later
 task.execute_remotely()
