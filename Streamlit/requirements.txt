@@ -1,4 +1,1 @@
 streamlit
-pillow
-numpy
-scikit-learn
