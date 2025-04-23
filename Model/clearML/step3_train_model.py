@@ -55,4 +55,5 @@ validation_accuracy = history.history['val_accuracy'][-1]
 print(f"Training Accuracy: {training_accuracy}")
 print(f"Validation Accuracy: {validation_accuracy}")
 
-task.upload_artifact('model', model)
+model.save("model.keras")
+task.upload_artifact(name="model", artifact_object="model.keras")
