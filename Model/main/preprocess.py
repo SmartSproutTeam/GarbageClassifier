@@ -19,175 +19,37 @@ def is_valid_image(path):
     except Exception:
         return False
 
-def downsample_images(input_dir, output_dir, target_count, seed):
+def downsample_images(X, y, label_names, target_count, seed):
     """
-    Downsamples or copies only valid images from input_dir to output_dir.
+    Downsamples or keeps only valid images from X and y.
     Ensures no class has more than target_count images.
+    Returns the updated X and y.
     """
-    os.makedirs(output_dir, exist_ok=True)
+    # Group images by class
+    class_images = {label: [] for label in range(len(label_names))}
+    for img, label in zip(X, y):
+        class_images[label].append(img)
 
-    label_names = os.listdir(input_dir)
+    # Process each class
+    updated_X = []
+    updated_y = []
 
-    # Looping through each class 
-    for label_name in label_names:
-        label_folder = os.path.join(input_dir, label_name)
+    for label, images in class_images.items():
+        label_name = label_names[label]
 
-        if not os.path.isdir(label_folder):
-            continue
-
-        output_label_folder = os.path.join(output_dir, label_name)
-        os.makedirs(output_label_folder, exist_ok=True)
-
-        # Skip if already has target number of valid images
-        existing_output_files = [
-            f for f in os.listdir(output_label_folder)
-            if f.lower().endswith(('.jpg', '.jpeg', '.png'))
-        ]
-        if len(existing_output_files) == target_count:
-            print(f"[{label_name}] Already has {target_count} images — skipping.")
-            continue
-
-        # Collect valid image files only
-        all_files = [
-            f for f in os.listdir(label_folder)
-            if f.lower().endswith(('.jpg', '.jpeg', '.png'))
-        ]
-        valid_files = []
-        for f in all_files:
-            full_path = os.path.join(label_folder, f)
-            if is_valid_image(full_path):
-                valid_files.append(f)
-            else:
-                print(f"[{label_name}] Skipped corrupted image: {f}")
-
-        if len(valid_files) == 0:
-            print(f"[{label_name}] No valid images found — skipping.")
-            continue
-
-        # Copying valid images or downsampling 
-        if len(valid_files) <= target_count:
-            print(f"[{label_name}] Number of invalid and valid images: {len(all_files)}.")
-            print(f"[{label_name}] Copying all {len(valid_files)} valid images.")
-            for f in valid_files:
-                src_path = os.path.join(label_folder, f)
-                dst_path = os.path.join(output_label_folder, f)
-                shutil.copy(src_path, dst_path)
+        # Downsample or copy images
+        if len(images) <= target_count:
+            print(f"[{label_name}] Keeping all {len(images)} images.")
+            updated_X.extend(images)
+            updated_y.extend([label] * len(images))
         else:
-            print(f"[{label_name}] Number of invalid and valid images: {len(all_files)}.")
-            print(f"[{label_name}] Downsampling from {len(valid_files)} to {target_count} valid images.")
+            print(f"[{label_name}] Downsampling from {len(images)} to {target_count} images.")
             random.seed(seed)
-            selected_files = random.sample(valid_files, target_count)
-            for f in selected_files:
-                src_path = os.path.join(label_folder, f)
-                dst_path = os.path.join(output_label_folder, f)
-                shutil.copy(src_path, dst_path)
+            selected_images = random.sample(images, target_count)
+            updated_X.extend(selected_images)
+            updated_y.extend([label] * target_count)
 
-def augment_images(output_dir, target_count, seed):
-    """
-    Augments each class folder inside the output directory until it reaches the specified target count.
-    Augmentation is only applied to original (non-augmented) images.
-    """
-
-    # Defining augmentation transformations
-    augment_params = {
-        'rotation_range': 40,
-        'width_shift_range': 0.2,
-        'height_shift_range': 0.2,
-        'shear_range': 0.2,
-        'zoom_range': 0.2,
-        'horizontal_flip': True,
-    }
-
-    # Initialising the augmentation generator
-    datagen = ImageDataGenerator(**augment_params)
-
-    # Looping through each class folder inside output_dir
-    for class_name in os.listdir(output_dir):
-        class_output_path = os.path.join(output_dir, class_name)
-
-        # Skip if not a directory
-        if not os.path.isdir(class_output_path):
-            continue
-
-        # Get a list of only original images, and skip augmented or 'aug' files
-        original_images = [
-            f for f in os.listdir(class_output_path)
-            if f.lower().endswith(('jpg', 'jpeg', 'png')) and not f.startswith('aug')
-        ]
-
-        # Defining current number of images 
-        current_count = len([
-            f for f in os.listdir(class_output_path)
-            if f.lower().endswith(('jpg', 'jpeg', 'png'))
-        ])
-
-        # Identifying how many images are needed i.e. number of images to augment
-        generate_count = target_count - current_count
-
-        # Skip this class if it's already balanced
-        if generate_count <= 0:
-            print(f"[{class_name}] No augmentation needed.")
-            continue
-
-        print(f"[{class_name}] Augmenting {generate_count} images...")
-
-        # Shuffling base images once
-        random.seed(seed)
-
-        # Generating shuffled list of base images of same lengths but different order
-        base_images = random.sample(original_images, len(original_images)) 
-        augment_index = 0 # index pointer that tracks current position in base images list 
-        i = 0 # i counts the number of augmented images generated and saved
-
-        # Generating images until target_count is met
-        while i < generate_count:
-            
-            # Reshuffling if all base images have been used
-            if augment_index >= len(base_images):
-                base_images = random.sample(original_images, len(original_images))
-                augment_index = 0
-
-            # Defining image name and image path 
-            img_name = base_images[augment_index]
-            img_path = os.path.join(class_output_path, img_name)
-
-            try:
-                # Changing to numpy array to use for ImageDataGenerator
-                img = load_img(img_path)
-                x = img_to_array(img)
-                x = np.expand_dims(x, axis=0)
-
-                # Performing augmentation on one image at a time 
-                for batch in datagen.flow(x, batch_size=1):
-
-                    # Taking just the first image 
-                    augmented_img = array_to_img(batch[0])
-
-                    # Create unique filename 
-                    original_base = os.path.splitext(img_name)[0]
-                    unique_id = uuid.uuid4().hex[:8]  # shorter uuid
-                    new_filename = f"{class_name}_aug_{original_base}_{unique_id}.jpeg"
-
-                    # Saving image 
-                    save_path = os.path.join(class_output_path, new_filename)
-                    augmented_img.save(save_path)
-
-                    # Incrementing indexes 
-                    i += 1
-                    augment_index +=1 
-
-                    # Print the actual count of saved files so far
-                    current_total = len([
-                        f for f in os.listdir(class_output_path)
-                        if f.lower().strip().endswith(('.jpg', '.jpeg', '.png'))
-                    ])
-                    print(f"[{class_name}] Generated {i}/{generate_count} → Saved {current_total}")
-
-                    # Breaking because datagen.flow() is infinite; we break immediately after one image is saved
-                    break  
-            except Exception as e:
-                print(f"[{class_name}] Skipped {img_name} due to error: {e}")
-                continue
+    return np.array(updated_X), np.array(updated_y)
 
 def load_images_from_folders(folder_path, image_size):
     """
@@ -257,30 +119,30 @@ def create_generators(X_train, y_train, X_val, y_val, X_test, y_test, batch_size
     """
 
     # Data augmentation on training data
-    train_datagen = ImageDataGenerator(
+    datagen = ImageDataGenerator(
+        rotation_range= 40,
+        width_shift_range= 0.2,
+        height_shift_range= 0.2,
+        shear_range= 0.2,
+        zoom_range= 0.2,
+        horizontal_flip= True,
         rescale=1./255,               # Rescaling pixel values to [0, 1]
         brightness_range= [0.5, 1.5]  # Augmentation (brightness)
     )
 
-    train_generator = train_datagen.flow(
+    train_generator = datagen.flow(
         X_train,                      # Numpy array of training images
         y_train,                      # Numpy array of integer labels  
         batch_size=batch_size,        # Batch size of 32
     )
 
-    # Data augmentation on validation data
-    val_datagen = ImageDataGenerator(rescale=1./255)  # Rescaling pixel values to [0, 1]
-
-    val_generator = val_datagen.flow(
+    val_generator = datagen.flow(
         X_val, 
         y_val,                      
         batch_size=batch_size,     
     )
 
-    # Data augmentation on test data
-    test_datagen = ImageDataGenerator(rescale=1./255)  # Rescaling pixel values to [0, 1]
-
-    test_generator = test_datagen.flow(
+    test_generator = datagen.flow(
         X_test, 
         y_test,         
         batch_size=batch_size, 

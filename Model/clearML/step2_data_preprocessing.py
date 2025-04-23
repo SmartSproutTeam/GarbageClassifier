@@ -4,7 +4,7 @@ import zipfile
 from clearml import Task
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from main.preprocess import load_images_from_folders, make_subsets
+from main.preprocess import load_images_from_folders, make_subsets, downsample_images
 
 
 # Connecting ClearML with the current process,
@@ -19,7 +19,7 @@ args = {
     'dataset_task_id': '', #update id if it needs running locally
     'dataset_url': '',
     'random_state': 42,
-    'test_size': 0.2,
+    'target_count': 2000,
     'image_size': image_size,
 }
 
@@ -49,9 +49,11 @@ with zipfile.ZipFile(artifact_path, 'r') as zip_ref:
 
 print("Dataset extracted to:", unzip_path)
 
-X, y, labels = load_images_from_folders(os.path.join(unzip_path, "garbage-dataset"), image_size=args['image_size'])
-print(f"Loaded {len(X)} images with labels: {len(labels)}")
-X_train, X_val, X_test, y_train, y_val, y_test = make_subsets(X, y, 42)
+X, y, label_names = load_images_from_folders(os.path.join(unzip_path, "garbage-dataset"), image_size=args['image_size'])
+print(f"Loaded {len(X)} images with labels: {len(label_names)}")
+X, y = downsample_images(X, y, label_names, args['target_count'], args['random_state'])
+print(f"Balanced {len(X)} images with labels: {len(label_names)}")
+X_train, X_val, X_test, y_train, y_val, y_test = make_subsets(X, y, args['random_state'])
 
 # === Upload Processed Data ===
 task.upload_artifact('X_train', X_train)
@@ -60,7 +62,7 @@ task.upload_artifact('X_test', X_test)
 task.upload_artifact('y_train', y_train)
 task.upload_artifact('y_val', y_val)
 task.upload_artifact('y_test', y_test)
-task.upload_artifact('label_names', labels)
+task.upload_artifact('label_names', label_names)
 task.upload_artifact('image_size', image_size)
 
 print("Artifacts uploaded in background.")
