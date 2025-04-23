@@ -51,7 +51,7 @@ print("Dataset extracted to:", unzip_path)
 
 X, y, labels = load_images_from_folders(os.path.join(unzip_path, "garbage-dataset"), image_size=args['image_size'])
 print(f"Loaded {len(X)} images with labels: {len(labels)}")
-X_train, X_val, X_test, y_train, y_val, y_test = make_subsets(X, y)
+X_train, X_val, X_test, y_train, y_val, y_test = make_subsets(X, y, 42)
 
 # === Upload Processed Data ===
 task.upload_artifact('X_train', X_train)
