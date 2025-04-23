@@ -17,6 +17,7 @@ st.title("Garbage Classifier")
 st.write("Upload an image for prediction")
 
 uploaded_file = st.file_uploader("Choose an image", type=["png", "jpg", "jpeg"])
+label_namges = ['battery', 'biological', 'cardboard', 'clothes', 'glass', 'metal', 'paper', 'plastic', 'shoes', 'trash']
 
 if uploaded_file:
     image = Image.open(uploaded_file)
@@ -28,6 +29,9 @@ if uploaded_file:
 
     # Make prediction
     prediction = model.predict(img_reshaped)
+    pred_index = np.argmax(prediction)
+    predicted_label = label_namges[pred_index]
+    confidence = prediction[0][pred_index]
 
     st.subheader("Prediction")
-    st.write(prediction[0])
+    st.write(f"Predicted label: **{predicted_label}** (Confidence: {confidence:.2f})")
