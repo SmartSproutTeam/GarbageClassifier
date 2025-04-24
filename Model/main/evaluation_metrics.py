@@ -75,8 +75,8 @@ def plot_confusion_matrix(y_true, y_pred, label_names, int_labels, save_path="co
     plt.xlabel("Predicted Labels", fontsize = 12)
     plt.ylabel("True Labels", fontsize = 12)
     plt.title("Confusion Matrix of DenseNet201 Classifier", fontsize = 14)
-    plt.show()
 
     plt.savefig(save_path, format='jpg', dpi=300, bbox_inches='tight')
+    plt.show()
     plt.close()
 
