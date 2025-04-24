@@ -5,6 +5,7 @@ import numpy as np
 from clearml import Task, Logger
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from main.evaluation_metrics import calculate_metrics, plot_confusion_matrix
 from main.model import build_model, train_model
 from main.preprocess import create_generators
 
@@ -39,7 +40,7 @@ print('Dataset loaded')
 # Creating generators
 batch_size = 32
 train_generator, val_generator, test_generator = create_generators(X_train, y_train, X_val, y_val, X_test, y_test, batch_size)
-
+int_labels = [i for i in range(len(label_names))]
 # Defining the best model
 best_model_file = "best_model.keras"
 
@@ -57,3 +58,9 @@ print(f"Validation Accuracy: {validation_accuracy}")
 
 model.save("model.keras")
 task.upload_artifact(name="model", artifact_object="model.keras")
+
+y_pred, df_report = calculate_metrics(test_generator, y_test, model, label_names)
+plot_confusion_matrix(y_test, y_pred, label_names, int_labels)
+
+df_report.to_csv("evaluation_metrics.csv")
+task.upload_artifact(name="evaluation_metrics", artifact_object="evaluation_metrics.csv")

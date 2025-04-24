@@ -58,7 +58,7 @@ def calculate_metrics(test_generator, y_test, model, label_names):
     # Saving to CSV file
     df_report.to_csv("evaluation_metrics.csv")
 
-    return y_pred
+    return y_pred, df_report
 
 
 def plot_confusion_matrix(y_true, y_pred, label_names, int_labels):
