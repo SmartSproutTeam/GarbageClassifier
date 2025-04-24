@@ -61,7 +61,7 @@ def calculate_metrics(test_generator, y_test, model, label_names):
     return y_pred, df_report
 
 
-def plot_confusion_matrix(y_true, y_pred, label_names, int_labels):
+def plot_confusion_matrix(y_true, y_pred, label_names, int_labels, save_path="confusion_matrix.jpg", upload_name="confusion_matrix"):
     """
     This function plots the confusion matrix.
     """
@@ -76,4 +76,7 @@ def plot_confusion_matrix(y_true, y_pred, label_names, int_labels):
     plt.ylabel("True Labels", fontsize = 12)
     plt.title("Confusion Matrix of DenseNet201 Classifier", fontsize = 14)
     plt.show()
+
+    plt.savefig(save_path, format='jpg', dpi=300, bbox_inches='tight')
+    plt.close()
 
