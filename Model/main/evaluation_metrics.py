@@ -5,7 +5,7 @@ import numpy as np
 import seaborn as sns
 from sklearn.metrics import confusion_matrix, classification_report
 
-def plot_history(history):
+def plot_history(history, save_path="accuracy.jpg"):
     """
     This function plots the training and validation accuracy and loss.
     """
@@ -30,6 +30,9 @@ def plot_history(history):
     plt.xlim([0, len(history)])  
     plt.xticks(range(len(history)))  
     plt.legend()
+
+
+    plt.savefig(save_path, format='jpg', dpi=300, bbox_inches='tight')
 
     plt.show()
 
@@ -61,7 +64,7 @@ def calculate_metrics(test_generator, y_test, model, label_names):
     return y_pred, df_report
 
 
-def plot_confusion_matrix(y_true, y_pred, label_names, int_labels, save_path="confusion_matrix.jpg", upload_name="confusion_matrix"):
+def plot_confusion_matrix(y_true, y_pred, label_names, int_labels, save_path="confusion_matrix.jpg"):
     """
     This function plots the confusion matrix.
     """

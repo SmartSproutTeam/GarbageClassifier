@@ -3,9 +3,10 @@ import sys
 import matplotlib.pyplot as plt
 import numpy as np
 from clearml import Task, Logger
+import pandas as pd
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from main.evaluation_metrics import calculate_metrics, plot_confusion_matrix
+from main.evaluation_metrics import calculate_metrics, plot_confusion_matrix, plot_history
 from main.model import build_model, train_model
 from main.preprocess import create_generators
 
@@ -67,3 +68,10 @@ plot_confusion_matrix(y_test, y_pred, label_names, int_labels, save_path, upload
 df_report.to_csv("evaluation_metrics.csv")
 task.upload_artifact(name="evaluation_metrics", artifact_object="evaluation_metrics.csv")
 task.upload_artifact(name=upload_name, artifact_object=save_path)
+
+save_path="accuracy.jpg"
+upload_name="accuracy"
+history_df = pd.DataFrame(history.history)
+plot_history(history_df, save_path)
+task.upload_artifact(name=upload_name, artifact_object=save_path)
+
