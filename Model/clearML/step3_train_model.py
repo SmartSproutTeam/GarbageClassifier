@@ -63,7 +63,7 @@ task.upload_artifact(name="model", artifact_object="model.keras")
 y_pred, df_report = calculate_metrics(test_generator, y_test, model, label_names)
 save_path="confusion_matrix.jpg"
 upload_name="confusion_matrix"
-plot_confusion_matrix(y_test, y_pred, label_names, int_labels, save_path, upload_name)
+plot_confusion_matrix(y_test, y_pred, label_names, int_labels, save_path)
 
 df_report.to_csv("evaluation_metrics.csv")
 task.upload_artifact(name="evaluation_metrics", artifact_object="evaluation_metrics.csv")
