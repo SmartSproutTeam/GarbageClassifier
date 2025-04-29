@@ -10,8 +10,8 @@ def main():
     """
 
     # Initialising dataset path and balanced dataset path 
-    dataset_path = './Data/garbage-dataset' # ============================== EDIT THIS FOR GOOGLE ENTERPRISE
-    balanced_dataset_path = './Data/garbage-dataset-balanced' # ============ EDIT THIS FOR GOOGLE ENTERPRISE
+    dataset_path = '/content/GarbageClassifier/Data'
+    balanced_dataset_path = '/content/GarbageClassifier/BalancedData' 
 
     # Defining image size, batch size, seed and target count for each class 
     image_size = (224, 224)
