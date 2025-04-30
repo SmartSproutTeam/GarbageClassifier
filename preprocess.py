@@ -75,8 +75,8 @@ def downsample_images(input_dir, output_dir, target_count, seed):
         else:
             print(f"[{label_name}] Number of invalid and valid images: {len(all_files)}.")
             print(f"[{label_name}] Downsampling from {len(valid_files)} to {target_count} valid images.")
-            random.seed(seed)
-            selected_files = random.sample(valid_files, target_count)
+            random.seed(seed) 
+            selected_files = random.sample(valid_files, target_count) 
             for f in selected_files:
                 src_path = os.path.join(label_folder, f)
                 dst_path = os.path.join(output_label_folder, f)
@@ -95,7 +95,7 @@ def augment_images(output_dir, target_count, seed):
         'height_shift_range': 0.2,
         'shear_range': 0.2,
         'zoom_range': 0.2,
-        'horizontal_flip': True,
+        'horizontal_flip': True
     }
 
     # Initialising the augmentation generator
