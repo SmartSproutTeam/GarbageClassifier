@@ -1,6 +1,7 @@
 from tensorflow import keras
 from tensorflow.keras import layers
 from tensorflow.keras.applications import DenseNet201
+from tensorflow.keras.optimizers import Adam  
 
 def define_base_model():
     """
@@ -45,8 +46,10 @@ def build_model(image_size, num_classes):
     # Defining the model 
     model = keras.Model(inputs, outputs)
 
-    # Compiling the model
-    model.compile(optimizer="adam", 
+    # Defining Adam with a slower learning rate 
+    optimiser = Adam(learning_rate=6e-5)
+
+    model.compile(optimizer=optimiser, 
                   loss="sparse_categorical_crossentropy",
                   metrics=["accuracy"])
 
