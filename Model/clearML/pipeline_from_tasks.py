@@ -27,6 +27,7 @@ def run_pipeline():
     pipe = PipelineController(
         name="Pipeline demo", project="GarbageClassifier", version="0.0.1", add_pipeline_tags=False
     )
+    #HI
 
     pipe.add_parameter(
         "url",
