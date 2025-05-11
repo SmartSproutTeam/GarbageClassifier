@@ -49,7 +49,7 @@ with zipfile.ZipFile(artifact_path, 'r') as zip_ref:
 
 print("Dataset extracted to:", unzip_path)
 
-X, y, label_names = load_images_from_folders(os.path.join(unzip_path, "garbage-dataset"), image_size=args['image_size'])
+X, y, label_names = load_images_from_folders(os.path.join(unzip_path, "balanced_dataset"), image_size=args['image_size'])
 print(f"Loaded {len(X)} images with labels: {len(label_names)}")
 X, y = downsample_images(X, y, label_names, args['target_count'], args['random_state'])
 print(f"Balanced {len(X)} images with labels: {len(label_names)}")
