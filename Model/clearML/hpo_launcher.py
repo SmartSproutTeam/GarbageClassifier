@@ -20,6 +20,7 @@ task = Task.init(
 
 # Connect parameters
 args = {
+    'dataset_task_id': '',
     'base_train_task_id': '8b3f72f435704677abe4e27323d3eba3',  # Will be set from pipeline
     'num_trials': 3,  # Reduced from 10 to 3 trials
     'time_limit_minutes': 20,  # Reduced from 60 to 5 minutes
@@ -37,34 +38,12 @@ logger.info(f"Connected parameters: {args}")
 # Execute the task remotely
 task.execute_remotely()
 
-# Get the dataset ID from pipeline parameters
-dataset_id = task.get_parameter('General/processed_dataset_id')  # Get from General namespace
-if not dataset_id:
-    # Try getting from args as fallback
-    dataset_id = args.get('processed_dataset_id')
-    logger.info(f"No dataset_id in General namespace, using from args: {dataset_id}")
-
-if not dataset_id:
-    # Use fixed dataset ID as last resort
-    dataset_id = "99e286d358754697a37ad75c279a6f0a"
-    logger.info(f"Using fixed dataset ID: {dataset_id}")
-
-logger.info(f"Using dataset ID: {dataset_id}")
-
 # Get the actual training model task
 try:
     BASE_TRAIN_TASK_ID = args['base_train_task_id']
     logger.info(f"Using base training task ID: {BASE_TRAIN_TASK_ID}")
 except Exception as e:
     logger.error(f"Failed to get base training task ID: {e}")
-    raise
-
-# Verify dataset exists
-try:
-    dataset = Dataset.get(dataset_id=dataset_id)
-    logger.info(f"Successfully verified dataset: {dataset.name}")
-except Exception as e:
-    logger.error(f"Failed to verify dataset: {e}")
     raise
 
 # Create the HPO task
@@ -89,8 +68,8 @@ hpo_task = HyperParameterOptimizer(
     execution_queue=args['test_queue'],
     save_top_k_tasks_only=2,  # Reduced from 5 to 2
     parameter_override={
-        'processed_dataset_id': dataset_id,
-        'General/processed_dataset_id': dataset_id,
+        'processed_dataset_id': args['dataset_task_id'],
+        'General/processed_dataset_id': args['dataset_task_id'],
         'test_queue': args['test_queue'],
         'General/test_queue': args['test_queue'],
         'num_epochs': args['num_epochs'],
