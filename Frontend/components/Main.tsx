@@ -69,7 +69,7 @@ export default function Main() {
     } as any);
 
     try {
-      const response = await fetch("http://192.168.18.2:5010/detect", {
+      const response = await fetch("http://192.168.129.120:5010/detect", {
         method: "POST",
         headers: {
           "Content-Type": "multipart/form-data",

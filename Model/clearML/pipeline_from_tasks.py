@@ -25,7 +25,7 @@ def run_pipeline():
     # Connecting ClearML with the current pipeline,
     # from here on everything is logged automatically
     pipe = PipelineController(
-        name="Pipeline demo", project="GarbageClassifier", version="0.0.1", add_pipeline_tags=False
+        name="HPO", project="GarbageClassifier", version="0.0.1", add_pipeline_tags=False
     )
 
     pipe.add_parameter(
@@ -61,6 +61,16 @@ def run_pipeline():
         base_task_name="Train model",
         parameter_override={"General/dataset_task_id": "${stage_process.id}"},
     )
+
+    pipe.add_step(
+    name="stage_hpo",
+    parents=["stage_train", "stage_process", "stage_data"],
+    base_task_project="GarbageClassifier",
+    base_task_name="HPO",
+    parameter_override={
+            "General/dataset_task_id": "${stage_data.id}",
+            "General/base_train_task_id": "${stage_train.id}"},
+)
 
     # for debugging purposes use local jobs
     pipe.start_locally()

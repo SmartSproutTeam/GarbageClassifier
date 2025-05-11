@@ -19,7 +19,7 @@ def define_base_model():
 
     return conv_base
 
-def build_model(image_size, num_classes):
+def build_model(image_size, num_classes, learning_rate):
     """
     This function builds a convolutional neural network model.
 
@@ -48,13 +48,15 @@ def build_model(image_size, num_classes):
     model = keras.Model(inputs, outputs)
 
     # Compiling the model
-    model.compile(optimizer="adam", 
+    optimizer = keras.optimizers.Adam(learning_rate=learning_rate)
+
+    model.compile(optimizer=optimizer, 
                   loss="sparse_categorical_crossentropy",
                   metrics=["accuracy"])
 
     return model
 
-def train_model(model, train_generator, val_generator, best_model_file):
+def train_model(model, train_generator, val_generator, best_model_file, epochs):
     """
     This function trains the model.
     """
@@ -69,7 +71,7 @@ def train_model(model, train_generator, val_generator, best_model_file):
 
     history = model.fit(
         train_generator,
-        epochs=20, 
+        epochs=epochs, 
         validation_data=val_generator,
         callbacks=callbacks,
     )
