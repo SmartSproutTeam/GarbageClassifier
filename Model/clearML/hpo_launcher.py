@@ -23,14 +23,13 @@ args = {
     'dataset_task_id': '',
     'base_train_task_id': '8b3f72f435704677abe4e27323d3eba3',  # Will be set from pipeline
     'num_trials': 3,  # Reduced from 10 to 3 trials
-    'time_limit_minutes': 20,  # Reduced from 60 to 5 minutes
+    'time_limit_minutes': 10000,  # Reduced from 60 to 5 minutes
     'run_as_service': False,
     'test_queue': 'pipeline',  # Queue for test tasks
     'processed_dataset_id': '99e286d358754697a37ad75c279a6f0a',  # Will be set from pipeline
-    'num_epochs': 20,  # Reduced from 50 to 20 epochs
     'batch_size': 32,  # Default batch size
-    'learning_rate': 1e-3,  # Default learning rate
-    'weight_decay': 1e-5  # Default weight decay
+    'learning_rate': 0.001,  # Default learning rate
+    'neural_count': 128  # Default weight decay
 }
 args = task.connect(args)
 logger.info(f"Connected parameters: {args}")
@@ -50,10 +49,9 @@ except Exception as e:
 hpo_task = HyperParameterOptimizer(
     base_task_id=BASE_TRAIN_TASK_ID,
     hyper_parameters=[
-        UniformIntegerParameterRange('num_epochs', min_value=10, max_value=args['num_epochs']),
-        UniformIntegerParameterRange('batch_size', min_value=16, max_value=64),  # Reduced range
-        UniformParameterRange('learning_rate', min_value=1e-4, max_value=1e-2),  # Reduced range
-        UniformParameterRange('weight_decay', min_value=1e-6, max_value=1e-4)  # Reduced range
+        UniformIntegerParameterRange('neural_count', min_value=128, max_value=256, step_size=128),  # Reduced range
+        UniformIntegerParameterRange('batch_size', min_value=16, max_value=32, step_size=16),  # Reduced range
+        UniformParameterRange('learning_rate', min_value=0.001, max_value=0.0005, step_size=0.0005),  # Reduced range
     ],
     objective_metric_title='validation',
     objective_metric_series='accuracy',
@@ -72,14 +70,12 @@ hpo_task = HyperParameterOptimizer(
         'General/processed_dataset_id': args['dataset_task_id'],
         'test_queue': args['test_queue'],
         'General/test_queue': args['test_queue'],
-        'num_epochs': args['num_epochs'],
-        'General/num_epochs': args['num_epochs'],
         'batch_size': args['batch_size'],
         'General/batch_size': args['batch_size'],
         'learning_rate': args['learning_rate'],
         'General/learning_rate': args['learning_rate'],
-        'weight_decay': args['weight_decay'],
-        'General/weight_decay': args['weight_decay']
+        'neural_count': args['neural_count'],
+        'General/neural_count': args['neural_count']
     }
 )
 

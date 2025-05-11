@@ -21,7 +21,7 @@ args = {
     'dataset_task_id': '', # replace the value only when you need debug locally
     'batch_size': 32,
     'learning_rate': 0.001,
-    'epochs': 10,
+    'neural_count': 256,
 }
 task.connect(args)
 
@@ -43,7 +43,7 @@ print('Dataset loaded')
 
 batch_size = args['batch_size']
 learning_rate = args['learning_rate']
-epochs = args['epochs']
+neural_count = args['neural_count']
 # Creating generators
 train_generator, val_generator, test_generator = create_generators(X_train, y_train, X_val, y_val, X_test, y_test, batch_size)
 int_labels = [i for i in range(len(label_names))]
@@ -53,8 +53,8 @@ best_model_file = "best_model.keras"
 print('Generators loaded')
 
 # Training the model
-model = build_model(image_size, len(label_names), learning_rate)
-history = train_model(model, train_generator, val_generator, best_model_file, epochs)
+model = build_model(image_size, len(label_names), neural_count, learning_rate)
+history = train_model(model, train_generator, val_generator, best_model_file)
 
 training_accuracy = history.history['accuracy'][-1]
 validation_accuracy = history.history['val_accuracy'][-1]

@@ -19,7 +19,7 @@ def define_base_model():
 
     return conv_base
 
-def build_model(image_size, num_classes, learning_rate):
+def build_model(image_size, num_classes, neural_count, learning_rate):
     """
     This function builds a convolutional neural network model.
 
@@ -36,7 +36,7 @@ def build_model(image_size, num_classes, learning_rate):
     x = layers.GlobalAveragePooling2D()(x)
     
     # Defining Dense and Batch Normalisation layers
-    x = layers.Dense(256)(x)
+    x = layers.Dense(neural_count)(x)
     x = layers.BatchNormalization()(x)
     x = layers.Activation("relu")(x)
     x = layers.Dropout(0.5)(x)
@@ -56,7 +56,7 @@ def build_model(image_size, num_classes, learning_rate):
 
     return model
 
-def train_model(model, train_generator, val_generator, best_model_file, epochs):
+def train_model(model, train_generator, val_generator, best_model_file):
     """
     This function trains the model.
     """
@@ -71,7 +71,7 @@ def train_model(model, train_generator, val_generator, best_model_file, epochs):
 
     history = model.fit(
         train_generator,
-        epochs=epochs, 
+        epochs=20, 
         validation_data=val_generator,
         callbacks=callbacks,
     )
