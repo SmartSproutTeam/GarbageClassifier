@@ -8,7 +8,7 @@ task = Task.init(project_name="GarbageClassifier", task_name="Upload dataset")
 task.execute_remotely()
 
 # Path to the zipped dataset file
-zipped_dataset = "/content/GarbageClassifier/Data/balanced_dataset.zip"
+zipped_dataset = "../../Data/balanced_dataset.zip"
 
 print(f"Current working directory: {os.getcwd()}")
 
