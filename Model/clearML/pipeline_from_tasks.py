@@ -40,6 +40,7 @@ def run_pipeline():
         base_task_project="GarbageClassifier",
         base_task_name="Upload dataset",
         parameter_override={"General/dataset_url": "${pipeline.url}"},
+    cache_executed_step=True,
     )
 
     pipe.add_step(
@@ -52,6 +53,7 @@ def run_pipeline():
             "General/test_size": 0.25,
             "General/random_state": 42
         },
+    cache_executed_step=True,
     )
 
     pipe.add_step(
@@ -60,6 +62,7 @@ def run_pipeline():
         base_task_project="GarbageClassifier",
         base_task_name="Train model",
         parameter_override={"General/dataset_task_id": "${stage_process.id}"},
+    cache_executed_step=True,
     )
 
     pipe.add_step(
@@ -70,6 +73,7 @@ def run_pipeline():
     parameter_override={
             "General/dataset_task_id": "${stage_data.id}",
             "General/base_train_task_id": "${stage_train.id}"},
+    cache_executed_step=True,
 )
 
     # for debugging purposes use local jobs

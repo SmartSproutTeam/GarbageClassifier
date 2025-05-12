@@ -23,7 +23,7 @@ args = {
     'dataset_task_id': '',
     'base_train_task_id': '8b3f72f435704677abe4e27323d3eba3',  # Will be set from pipeline
     'num_trials': 3,  # Reduced from 10 to 3 trials
-    'time_limit_minutes': 10000,  # Reduced from 60 to 5 minutes
+    'time_limit_minutes': 1000,  # Reduced from 60 to 5 minutes
     'run_as_service': False,
     'test_queue': 'pipeline',  # Queue for test tasks
     'processed_dataset_id': '99e286d358754697a37ad75c279a6f0a',  # Will be set from pipeline
@@ -61,7 +61,7 @@ hpo_task = HyperParameterOptimizer(
     compute_time_limit=None,
     total_max_jobs=args['num_trials'],
     min_iteration_per_job=1,
-    max_iteration_per_job=args['num_epochs'],
+    max_iteration_per_job=20,
     pool_period_min=1.0,  # Reduced from 2.0 to 1.0 to check more frequently
     execution_queue=args['test_queue'],
     save_top_k_tasks_only=2,  # Reduced from 5 to 2
@@ -101,10 +101,9 @@ try:
         
         # Log detailed information about the best experiment
         logger.info("Best experiment parameters:")
-        logger.info(f"  - num_epochs: {best_params.get('num_epochs')}")
         logger.info(f"  - batch_size: {best_params.get('batch_size')}")
         logger.info(f"  - learning_rate: {best_params.get('learning_rate')}")
-        logger.info(f"  - weight_decay: {best_params.get('weight_decay')}")
+        logger.info(f"  - neural_count: {best_params.get('neural_count')}")
         logger.info(f"Best validation accuracy: {best_accuracy}")
         
         # Save best parameters and accuracy
