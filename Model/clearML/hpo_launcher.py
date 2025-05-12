@@ -25,7 +25,7 @@ args = {
     'num_trials': 3,  # Reduced from 10 to 3 trials
     'time_limit_minutes': 1000,  # Reduced from 60 to 5 minutes
     'run_as_service': False,
-    'test_queue': 'pipeline',  # Queue for test tasks
+    'test_queue': 'helloworld',  # Queue for test tasks
     'processed_dataset_id': '99e286d358754697a37ad75c279a6f0a',  # Will be set from pipeline
     'batch_size': 32,  # Default batch size
     'learning_rate': 0.001,  # Default learning rate
