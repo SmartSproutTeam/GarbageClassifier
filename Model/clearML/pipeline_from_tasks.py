@@ -86,7 +86,7 @@ def run_pipeline():
     base_task_project="GarbageClassifier",
     base_task_name="HPO",
     parameter_override={
-            "General/dataset_task_id": "${stage_data.id}",
+            "General/dataset_task_id": "26a16aa50c9c42a09a26af57fcebf215",
             "General/base_train_task_id": "${stage_train.id}"},
     cache_executed_step=True,
 )
