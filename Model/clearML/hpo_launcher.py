@@ -51,7 +51,7 @@ hpo_task = HyperParameterOptimizer(
     hyper_parameters=[
         UniformIntegerParameterRange('neural_count', min_value=128, max_value=256, step_size=128),  # Reduced range
         UniformIntegerParameterRange('batch_size', min_value=16, max_value=32, step_size=16),  # Reduced range
-        UniformParameterRange('learning_rate', min_value=0.001, max_value=0.0005, step_size=0.0005),  # Reduced range
+        UniformParameterRange('learning_rate', min_value=0.0005, max_value=0.001, step_size=0.0005),  # Reduced range
     ],
     objective_metric_title='validation',
     objective_metric_series='accuracy',
