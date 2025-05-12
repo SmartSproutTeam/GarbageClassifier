@@ -82,7 +82,7 @@ def run_pipeline():
 
     pipe.add_step(
     name="stage_hpo",
-    parents=["stage_train", "stage_process", "stage_data"],
+    parents=["stage_train", "stage_process"],
     base_task_project="GarbageClassifier",
     base_task_name="HPO",
     parameter_override={
