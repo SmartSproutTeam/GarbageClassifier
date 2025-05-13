@@ -37,7 +37,6 @@ def run_pipeline():
 
     pipe.add_step(
         name="stage_train",
-        parents=["stage_process"],
         base_task_project="GarbageClassifier",
         base_task_name="Train model",
         parameter_override={"General/dataset_task_id": "80b62f1dc03d4c61b299d63ed4f61a41"},
