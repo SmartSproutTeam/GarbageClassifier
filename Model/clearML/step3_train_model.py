@@ -56,6 +56,11 @@ print('Generators loaded')
 model = build_model(image_size, len(label_names), neural_count, learning_rate)
 history = train_model(model, train_generator, val_generator, best_model_file)
 
+for epoch in range(len(history.history['loss'])):
+    task.get_logger().report_scalar(title="train", series="epoch_loss", value=history.history['loss'][epoch], iteration=epoch)
+    task.get_logger().report_scalar(title="validation", series="accuracy", value=history.history['val_accuracy'][epoch], iteration=epoch)
+    task.get_logger().report_scalar(title="validation", series="accuracy", value=history.history['val_accuracy'][epoch], iteration=0)
+
 training_accuracy = history.history['accuracy'][-1]
 validation_accuracy = history.history['val_accuracy'][-1]
 

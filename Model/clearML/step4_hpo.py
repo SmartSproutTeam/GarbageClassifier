@@ -1,6 +1,6 @@
 from clearml import Task, Dataset
 from clearml.automation import HyperParameterOptimizer
-from clearml.automation import UniformIntegerParameterRange, UniformParameterRange
+from clearml.automation import UniformIntegerParameterRange, DiscreteParameterRange
 import logging
 import time
 import json
@@ -51,7 +51,7 @@ hpo_task = HyperParameterOptimizer(
     hyper_parameters=[
         UniformIntegerParameterRange('neural_count', min_value=128, max_value=256, step_size=128),  # Reduced range
         UniformIntegerParameterRange('batch_size', min_value=16, max_value=32, step_size=16),  # Reduced range
-        UniformParameterRange('learning_rate', min_value=0.0005, max_value=0.001, step_size=0.0005),  # Reduced range
+        DiscreteParameterRange('learning_rate', values=[0.0005, 0.001]),  # Reduced range
     ],
     objective_metric_title='validation',
     objective_metric_series='accuracy',
@@ -96,6 +96,7 @@ try:
         
         # Get the best parameters and accuracy
         best_params = best_exp.get_parameters()
+        logger.info(best_params)
         metrics = best_exp.get_last_scalar_metrics()
         best_accuracy = metrics['validation']['accuracy'] if metrics and 'validation' in metrics and 'accuracy' in metrics['validation'] else None
         
