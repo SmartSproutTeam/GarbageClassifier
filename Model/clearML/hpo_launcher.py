@@ -22,7 +22,7 @@ task = Task.init(
 args = {
     'dataset_task_id': '',
     'base_train_task_id': '8b3f72f435704677abe4e27323d3eba3',  # Will be set from pipeline
-    'num_trials': 3,  # Reduced from 10 to 3 trials
+    'num_trials': 8,  # Reduced from 10 to 3 trials
     'time_limit_minutes': 1000,  # Reduced from 60 to 5 minutes
     'run_as_service': False,
     'test_queue': 'helloworld',  # Queue for test tasks
@@ -85,7 +85,7 @@ hpo_task.start()
 
 # Wait for optimization to complete
 logger.info(f"Waiting for optimization to complete (time limit: {args['time_limit_minutes']} minutes)...")
-time.sleep(args['time_limit_minutes'] * 60)  # Wait for the full time limit
+hpo_task.wait()
 
 # Get the top performing experiments
 try:
