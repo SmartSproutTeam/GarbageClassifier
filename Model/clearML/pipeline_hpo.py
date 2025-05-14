@@ -41,7 +41,7 @@ def run_pipeline():
         base_task_name="HPO",
         parameter_override={
                 "General/dataset_task_id": "26a16aa50c9c42a09a26af57fcebf215",
-                "General/base_train_task_id": "ef92388c8fbb42c5b6724f85deaa7872"},
+                "General/base_train_task_id": "7216ba1c555b4fe0b95fbb2288869db0"},
         cache_executed_step=True,
     )
 
