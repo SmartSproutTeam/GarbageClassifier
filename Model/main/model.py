@@ -39,6 +39,7 @@ def build_model(image_size, num_classes, neural_count, learning_rate):
     x = layers.Dense(neural_count)(x)
     x = layers.BatchNormalization()(x)
     x = layers.Activation("relu")(x)
+    x = layers.Dropout(0.5)(x)
 
     # Defining the outputs and the number of output classes
     outputs = layers.Dense(num_classes, activation = "softmax")(x) 
@@ -70,7 +71,7 @@ def train_model(model, train_generator, val_generator, best_model_file):
 
     history = model.fit(
         train_generator,
-        epochs=10, 
+        epochs=20, 
         validation_data=val_generator,
         callbacks=callbacks,
     )
